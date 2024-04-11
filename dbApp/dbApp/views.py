@@ -4,6 +4,7 @@ import mysql.connector
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import Group
 
 def index(request):
     if request.method == 'POST':
@@ -20,12 +21,21 @@ def index(request):
                 context = {}
                 return HttpResponse(template.render(context, request))
             else:
-                # Redirect to regular user dashboard or wherever you want
-                return redirect('user_dashboard')
-        else:
-            # Authentication failed, return error message
-            context = {'error': 'Invalid username or password'}
-            return render(request, 'dbApp/login.html', context)
+                # Check if user belongs to instructor or student group
+                if Group.objects.filter(user=user, name='instructors').exists():
+                    # Redirect to instructor dashboard
+                    template = loader.get_template('dbApp/instructor_dashboard.html')
+                    context = {}
+                    return HttpResponse(template.render(context, request))
+                elif Group.objects.filter(user=user, name='students').exists():
+                    # Redirect to student dashboard
+                    template = loader.get_template('dbApp/student_dashboard.html')
+                    context = {}
+                    return HttpResponse(template.render(context, request))
+                else:
+                    template = loader.get_template('dbApp/login.html')
+                    context = {'error': 'Invalid username or password'}
+                    return HttpResponse(template.render(context, request))
     else:
         # Render the login form
         template = loader.get_template('dbApp/login.html')
@@ -34,6 +44,18 @@ def index(request):
 
 def admin_dashboard_view(request):
     template = loader.get_template('dbApp/admin_dashboard.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
+
+def instructor_dashboard_view(request):
+    template = loader.get_template('dbApp/instructor_dashboard.html')
+    context = {}
+
+    return HttpResponse(template.render(context, request))
+
+def student_dashboard_view(request):
+    template = loader.get_template('dbApp/student_dashboard.html')
     context = {}
 
     return HttpResponse(template.render(context, request))

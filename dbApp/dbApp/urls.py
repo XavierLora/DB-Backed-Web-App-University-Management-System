@@ -23,4 +23,6 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('admin_dashboard_view', views.admin_dashboard_view, name='admin_dashboard'),
+    path('instructor_dashboard_view', views.instructor_dashboard_view, name='instructor_dashboard'),
+    path('student_dashboard_view', views.student_dashboard_view, name='student_dashboard'),
 ]
