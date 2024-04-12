@@ -10,9 +10,130 @@
   </head>
   <body>
     <div class="flex flex-col w-full place-items-center px-2">
-      <div class="navbar w-full bg-base-300 m-2 rounded-lg">
-        <button class="btn btn-ghost text-xl">Admin Dashboard</button>
+      <div class="navbar w-full bg-base-300 m-2 rounded-xl">
+        <a href="{% url 'index' %}">
+          <button class="btn btn-ghost text-xl">Admin Dashboard</button>
+        </a>
+      </div>
+      <div class="card m-2 w-10/12 bg-base-300 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">All Instructors</h2>
+          <form method="get" action="{% url 'admin_dashboard' %}" class="flex gap-2 items-center">
+            <select name="sort_by" class="select select-bordered w-full max-w-xs">
+              <option disabled selected>Sort By:</option>
+              <option value="name">Name</option>
+              <option value="dept_name">Department</option>
+              <option value="salary">Salary</option>
+            </select>
+            <input type="hidden" name="action" value="sort_instructors">
+            <button type="submit" class="btn btn-accent font-bold">Sort</button>
+          </form>
+          <div class="overflow-x-auto">
+            <table class="table">
+              <!-- head -->
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Deptarment</th>
+                  <th>Salary</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- row 1 -->
+                {% for instructor in instructors %}
+                <tr>
+                    <td>{{ instructor.name }}</td>
+                    <td>{{ instructor.dept_name }}</td>
+                    <td>{{ instructor.salary }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card m-2 w-10/12 bg-base-300 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">Department Salary Summary</h2>
+          <form method="get" action="{% url 'admin_dashboard' %}" class="flex gap-2 items-center">
+            <select name="sort_by" class="select select-bordered w-full max-w-xs">
+              <option disabled selected>Summary Type:</option>
+              <option value="MIN">Min</option>
+              <option value="MAX">Max</option>
+              <option value="AVG">Avg</option>
+            </select>
+            <input type="hidden" name="action" value="sort_salary">
+            <button type="submit" class="btn btn-accent font-bold">Sort</button>
+          </form>
+          <div class="overflow-x-auto">
+            <table class="table">
+              <!-- head -->
+              <thead>
+                <tr>
+                  <th>Deptarment</th>
+                  <th>Salary</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- row 1 -->
+                {% for salary in salaries %}
+                <tr>
+                    <td>{{ salary.dept_name }}</td>
+                    <td>{{ salary.salary }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card m-2 w-10/12 bg-base-300 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">Instructor Performance</h2>
+          <form method="post" class="flex gap-2 items-center">
+          <label class="input input-bordered flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
+            <input type="text" name="instructor" class="grow" value="Instructor" />
+          </label>
+          <select name="year" class="select select-bordered w-fit max-w-xs">
+            <option disabled selected>Year:</option>
+            <option>2019</option>
+            <option>2020</option>
+          </select>
+          <select name="semester" class="select select-bordered w-fit max-w-xs">
+            <option disabled selected>Semester:</option>
+            <option>Fall</option>
+            <option>Spring</option>
+          </select>
+          <button type="submit" class="btn btn-accent font-bold">Search</button>
+        </form>
+          <div class="overflow-x-auto">
+            <table class="table text-center">
+              <!-- head -->
+              <thead>
+                <tr>
+                  <th>Instructor</th>
+                  <th>Total Courses</th>
+                  <th>Num. Students</th>
+                  <th>Total Funding</th>
+                  <th>Publishes Papers</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- row 1 -->
+                <tr>
+                  <td>Chris Lynch</td>
+                  <td>3</td>
+                  <td>96</td>
+                  <td>100,000</td>
+                  <td>9</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </body>
 </html>
+
