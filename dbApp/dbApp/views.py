@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import mysql.connector
-from .models import Instructor
+from .models import Instructor, Teaches, Takes
 from django.db.models import Min, Max, Avg
 from django.template import loader
 from django.shortcuts import render, redirect
@@ -72,9 +72,32 @@ def admin_dashboard_view(request):
         return HttpResponse(template.render(context, request))
 
 def instructor_dashboard_view(request):
-    template = loader.get_template('dbApp/instructor_dashboard.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+    if request.method == 'GET':
+        instructor_name = request.GET.get('instructor')
+        semester = request.GET.get('semester')
+        year = request.GET.get('year')
+
+        # Query to get instructor ID based on name
+        instructor = Instructor.objects.get(name=instructor_name)
+        instructor_id = instructor.id
+
+        # Query to get courses taught by the instructor in a specific semester and year
+        courses_taught = Teaches.objects.filter(teacher_id=instructor_id, semester=semester, year=year)
+
+        # Query to get student enrollments for each course
+        course_enrollments = []
+        for course in courses_taught:
+            enrollment_count = Takes.objects.filter(course_id=course.course_id, sec_id=course.sec_id, semester=semester, year=year).count()
+            course_enrollments.append((f"{course.course_id} - {course.sec_id}", enrollment_count))
+        template = loader.get_template('dbApp/instructor_dashboard.html')
+        context = {'course_enrollments': course_enrollments}
+        print(course_enrollments)
+        return HttpResponse(template.render(context, request))
+    
+    else:
+        template = loader.get_template('dbApp/instructor_dashboard.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
 
 def student_dashboard_view(request):
     template = loader.get_template('dbApp/student_dashboard.html')

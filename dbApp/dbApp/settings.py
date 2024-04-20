@@ -82,7 +82,7 @@ DATABASES = {
 
             'USER': 'root',
 
-            'PASSWORD': 'blackhawk',
+            'PASSWORD': 'Xl2002!#',
 
             'HOST': 'localhost'
     }
