@@ -73,26 +73,55 @@ def admin_dashboard_view(request):
 
 def instructor_dashboard_view(request):
     if request.method == 'GET':
-        instructor_name = request.GET.get('instructor')
-        semester = request.GET.get('semester')
-        year = request.GET.get('year')
+        if 'action' in request.GET:
+            action = request.GET.get('action')
+            if action == 'course_summary':
+                instructor_name = request.GET.get('instructor')
+                semester = request.GET.get('semester')
+                year = request.GET.get('year')
 
-        # Query to get instructor ID based on name
-        instructor = Instructor.objects.get(name=instructor_name)
-        instructor_id = instructor.id
+                # Query to get instructor ID based on name
+                instructor = Instructor.objects.get(name=instructor_name)
+                instructor_id = instructor.id
+                # Query to get courses taught by the instructor in a specific semester and year
+                courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
+                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year)
 
-        # Query to get courses taught by the instructor in a specific semester and year
-        courses_taught = Teaches.objects.filter(teacher_id=instructor_id, semester=semester, year=year)
+                print(courses_taught_filter)
 
-        # Query to get student enrollments for each course
-        course_enrollments = []
-        for course in courses_taught:
-            enrollment_count = Takes.objects.filter(course_id=course.course_id, sec_id=course.sec_id, semester=semester, year=year).count()
-            course_enrollments.append((f"{course.course_id} - {course.sec_id}", enrollment_count))
-        template = loader.get_template('dbApp/instructor_dashboard.html')
-        context = {'course_enrollments': course_enrollments}
-        print(course_enrollments)
-        return HttpResponse(template.render(context, request))
+                # Query to get student enrollments for each course
+                course_enrollments = []
+                for course in courses_taught_filter:
+                    enrollment_count = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year']).count()
+                    course_enrollments.append((f"{course['course_id']} - {course['sec_id']}", enrollment_count))
+                
+                context = {'course_enrollments': course_enrollments}
+                template = loader.get_template('dbApp/instructor_dashboard.html')
+                return HttpResponse(template.render(context, request))
+            elif action == 'student_enrollment':
+                instructor_name = request.GET.get('instructor')
+                semester = request.GET.get('semester')
+                year = request.GET.get('year')
+
+                # Query to get instructor ID based on name
+                instructor = Instructor.objects.get(name=instructor_name)
+                instructor_id = instructor.id
+                # Query to get courses taught by the instructor in a specific semester and year
+                courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
+                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year)
+
+                print(courses_taught_filter)
+
+                # Query to get student enrollments for each course
+                course_enrollments = []
+                for course in courses_taught_filter:
+                    enrollment_count = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year']).count()
+                    course_enrollments.append((f"{course['course_id']} - {course['sec_id']}", enrollment_count))
+                
+                context = {'course_enrollments': course_enrollments}
+                template = loader.get_template('dbApp/instructor_dashboard.html')
+                return HttpResponse(template.render(context, request))
+
     
     else:
         template = loader.get_template('dbApp/instructor_dashboard.html')
