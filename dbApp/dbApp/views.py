@@ -66,6 +66,21 @@ def admin_dashboard_view(request):
                 context = {'salaries': instructors}
                 template = loader.get_template('dbApp/admin_dashboard.html')
                 return HttpResponse(template.render(context, request))
+            elif action == 'performance':
+                instructor_name = request.GET.get('instructor')
+                semester = request.GET.get('semester')
+                year = request.GET.get('year')
+                instructor = Instructor.objects.get(name=instructor_name)
+                instructor_id = instructor.id
+                instructor_performance = []
+                # Query to get courses taught by the instructor in a specific semester and year
+                courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
+                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year).count()
+                instructor_performance.append((instructor.name, courses_taught_filter))
+                print(instructor_performance)
+                context = {'instructor_performance': instructor_performance}
+                template = loader.get_template('dbApp/admin_dashboard.html')
+                return HttpResponse(template.render(context, request))
     else:
         template = loader.get_template('dbApp/admin_dashboard.html')
         context = {}
