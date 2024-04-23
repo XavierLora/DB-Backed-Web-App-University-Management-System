@@ -6,14 +6,14 @@ from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
+from django.contrib import messages
 
 def index(request):
     if request.method == 'POST':
         # Handle login form submission
-        email = request.POST.get('email')
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             if user.is_superuser:
@@ -29,16 +29,17 @@ def index(request):
                     template = loader.get_template('dbApp/student_dashboard.html')
                     context = {}
                     return HttpResponse(template.render(context, request))
-                else:
-                    return render(request, 'dbApp/login.html', {'error': 'Invalid username or password'})
+        else:
+            print("Invalid login attempt")
+            messages.error(request, 'Invalid username or password.')
+            template = loader.get_template('dbApp/login.html')
+            context = {'error': True}
+            return HttpResponse(template.render(context, request))
     else:
         # Render the login form
         template = loader.get_template('dbApp/login.html')
         context = {}
         return HttpResponse(template.render(context, request))
-
-    # Default response if none of the conditions are met
-    return render(request, 'dbApp/login.html', {'error': 'Invalid request'})
 
 def admin_dashboard_view(request):
     if request.method == 'GET':
@@ -76,6 +77,7 @@ def admin_dashboard_view(request):
                 # Query to get courses taught by the instructor in a specific semester and year
                 courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
                 courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year).count()
+                
                 instructor_performance.append((instructor.name, courses_taught_filter))
                 print(instructor_performance)
                 context = {'instructor_performance': instructor_performance}

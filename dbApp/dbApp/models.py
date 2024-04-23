@@ -36,4 +36,20 @@ class Students(models.Model):
     total_credit = models.IntegerField()
     class Meta:
         db_table = 'student'
+
+class Papers(models.Model):
+    name = models.CharField(max_length=32)
+    semester = models.IntegerField()
+    papers = models.IntegerField()
+    years = models.IntegerField()
+    class Meta:
+        db_table = 'papers'
+
+class Funding(models.Model):
+    name = models.CharField(max_length=32)
+    semester = models.IntegerField()
+    funding = models.IntegerField()
+    years = models.IntegerField()
+    class Meta:
+        db_table = 'funding'
     
