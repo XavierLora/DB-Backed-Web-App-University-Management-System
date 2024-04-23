@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import mysql.connector
-from .models import Instructor, Teaches, Takes, Funding, Papers
+from .models import Instructor, Teaches, Takes, Funding, Papers, Students
 from django.db.models import Min, Max, Avg, Sum
 from django.template import loader
 from django.shortcuts import render, redirect
@@ -149,6 +149,8 @@ def instructor_dashboard_view(request):
                 for course in courses_taught_filter:
                     student_names = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year'])
                     student_enrollments.append((student_names))
+                print(student_enrollments)
+                # student_names = Students.objects.filter(student_id=)
                 
                 context = {'student_enrollments': student_enrollments}
                 template = loader.get_template('dbApp/instructor_dashboard.html')
