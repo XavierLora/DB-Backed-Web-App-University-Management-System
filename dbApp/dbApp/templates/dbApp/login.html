@@ -12,35 +12,38 @@
     <div class="w-full flex flex-col place-items-center text-center">
       <div class="hero min-h-screen" style="background-image: url(https://www.clarkson.edu/sites/default/files/2024-02/StudentCenterwfireplaceexterior%202000x1363.jpg);">
         <div class="hero-overlay bg-opacity-60"></div>
-        <div class="hero-content text-center text-neutral-content">
-          <div class="max-w-lg">
-            <div class="card backdrop-blur-sm bg-black/30 shadow-lg transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-              <div class="card-body items-center text-center">
-                <h2 class="card-title pb-2 text-4xl">Clarkson University<br>
-                  Management System</h2>
-                <form method="post" action="{% url 'index' %}" class="flex flex-col gap-2">
-                  {% csrf_token %}
-                <label class="input input-bordered flex items-center gap-2 bg-white/30 text-black">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white/30" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
-                  <input type="text" name="username" class="grow placeholder-black/30" placeholder="Username" />
-                </label>
-                <label class="input input-bordered flex items-center gap-2 bg-white/30 text-black/30">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white/40" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clip-rule="evenodd" /></svg>
-                  <input type="password" name="password" class="grow placeholder-black/30" value="password" />
-                </label>
-                <div class="card-actions flex justify-center w-full p-2">
-                  <button type="submit" class="btn btn-netural">Login</button>
-                </div>
-              </form>
+          <div class="w-full flex flex-row h-full">
+          <div class="flex-1 flex flex-col justify-center backdrop-blur h-full">
+            <h1 class="text-4xl font-medium text-left ml-10 p-2 text-white z-10">Welcome to Clarkson's<br> University Management System</h1>
+            <h1 class="text-xl text-left ml-10 p-2 mr-60 text-white z-10">Welcome Users! Admins, Instructors, and Students have access to up to date records of courses, instructors, grades and more!</h1>
+            <h1 class="text-xl text-left ml-10 p-2 mr-60 text-white z-10">Please login with your provided credentials or reach out to your Database Admin.</h1>
+            <div class="relative h-fit">
+              <img class="absolute blur-sm right-100 transform scale-125" src="https://www.clarkson.edu/sites/default/files/2023-07/Green%20-%20Clarkson%20Shield.png">
             </div>
           </div>
+          <div class="hero-content text-center text-neutral-content w-5/12">
+            <div class="max-w-lg">
+              <div class="card backdrop-blur-sm bg-black/30 shadow-lg transition-all duration-500 hover:scale-105 hover:shadow-2xl">
+                <div class="card-body items-center text-center">
+                  <h2 class="card-title pb-2 text-4xl text-white">Login</h2>
+                  <form method="post" action="{% url 'index' %}" class="flex flex-col gap-2">
+                    {% csrf_token %}
+                  <label class="input input-bordered flex items-center gap-2 bg-white/30 text-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white/30" class="w-4 h-4 opacity-70"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" /></svg>
+                    <input type="text" name="username" class="grow placeholder-black/30" placeholder="Username" />
+                  </label>
+                  <label class="input input-bordered flex items-center gap-2 bg-white/30 text-black/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white/40" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clip-rule="evenodd" /></svg>
+                    <input type="password" name="password" class="grow placeholder-black/30" value="password" />
+                  </label>
+                  <div class="card-actions flex justify-center w-full p-2">
+                    <button type="submit" class="btn btn-netural">Login</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            </div>
           </div>
-          {% if error %}
-          <div role="alert" class="alert alert-error absolute bottom-10 w-1/2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>Invalid Login, please try again.</span>
-          </div>
-        {% endif %}
         </div>
       </div>
     </div>
