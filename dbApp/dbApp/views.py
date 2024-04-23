@@ -1,12 +1,13 @@
 from django.http import HttpResponse
 import mysql.connector
-from .models import Instructor, Teaches, Takes, Funding, Papers, Students
-from django.db.models import Min, Max, Avg, Sum
+from .models import Instructor, Teaches, Takes, Funding, Papers, Students, Section
+from django.db.models import Min, Max, Avg, Sum, CharField
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group
 from django.contrib import messages
+from django.db.models.functions import Cast
 
 def index(request):
     if request.method == 'POST':
@@ -93,8 +94,8 @@ def admin_dashboard_view(request):
                 instructor_papers_filter = instructor_papers.filter(name=instructor_name, years=instructor_year, semester = instructor_semester)
                 print(instructor_papers_filter)
                 instructor_papers_sum = instructor_papers_filter.aggregate(total_papers=Sum('papers'))
-
-                instructor_performance.append((instructor.name, courses_taught_filter_count, enrollment_count, total_funding_sum, f"{instructor_papers_sum}"))
+                papers_count = instructor_papers_sum.get('total_papers', 0)
+                instructor_performance.append((instructor.name, courses_taught_filter_count, enrollment_count, total_funding_sum, papers_count))
                 print(instructor_performance)
                 context = {'instructor_performance': instructor_performance}
                 template = loader.get_template('dbApp/admin_dashboard.html')
@@ -163,6 +164,20 @@ def instructor_dashboard_view(request):
         return HttpResponse(template.render(context, request))
 
 def student_dashboard_view(request):
-    template = loader.get_template('dbApp/student_dashboard.html')
-    context = {}
-    return HttpResponse(template.render(context, request))
+    if request.method == 'GET':
+        dept_name = request.GET.get('dept')
+        year = request.GET.get('year')
+        semester = request.GET.get('semester')
+        print(dept_name, year, semester)
+        all_sections = Section.objects.filter(semester=semester, year=year)
+
+        # Filter sections in Python code based on course_id containing dept_name
+        filtered_sections = [section.course_id for section in all_sections if dept_name in section.course_id]
+        print(filtered_sections)
+        template = loader.get_template('dbApp/student_dashboard.html')
+        context = {'course_list': filtered_sections}
+        return HttpResponse(template.render(context, request))
+    else:
+        template = loader.get_template('dbApp/student_dashboard.html')
+        context = {}
+        return HttpResponse(template.render(context, request))

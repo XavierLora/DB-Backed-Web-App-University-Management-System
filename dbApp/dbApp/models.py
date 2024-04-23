@@ -53,3 +53,13 @@ class Funding(models.Model):
     class Meta:
         db_table = 'funding'
     
+class Section(models.Model):
+    course_id = models.CharField(primary_key=True, max_length=8)
+    sec_id = models.CharField(max_length=4)
+    semester = models.IntegerField()
+    year = models.IntegerField()
+    building = models.CharField(max_length=32)
+    room = models.CharField(max_length=8)
+    capacity = models.IntegerField()
+    class Meta:
+        db_table = 'section'
