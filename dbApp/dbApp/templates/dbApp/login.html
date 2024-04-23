@@ -9,17 +9,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
-    <div class="w-full flex flex-col place-items-center text-center">
+    <div class="w-full flex flex-col place-items-center text-center justify-center">
       <div class="hero min-h-screen" style="background-image: url(https://www.clarkson.edu/sites/default/files/2024-02/StudentCenterwfireplaceexterior%202000x1363.jpg);">
-        <div class="hero-overlay bg-opacity-60"></div>
+        <div class="hero-overlay bg-opacity-50"></div>
           <div class="w-full flex flex-row h-full">
-          <div class="flex-1 flex flex-col justify-center backdrop-blur h-full">
+          <div class="flex-1 flex flex-col justify-center backdrop-blur h-full overflow-hidden">
             <h1 class="text-4xl font-medium text-left ml-10 p-2 text-white z-10">Welcome to Clarkson's<br> University Management System</h1>
-            <h1 class="text-xl text-left ml-10 p-2 mr-60 text-white z-10">Welcome Users! Admins, Instructors, and Students have access to up to date records of courses, instructors, grades and more!</h1>
-            <h1 class="text-xl text-left ml-10 p-2 mr-60 text-white z-10">Please login with your provided credentials or reach out to your Database Admin.</h1>
-            <div class="relative h-fit">
-              <img class="absolute blur-sm right-100 transform scale-125" src="https://www.clarkson.edu/sites/default/files/2023-07/Green%20-%20Clarkson%20Shield.png">
-            </div>
+            <h1 class="text-2xl text-left ml-10 p-2 mr-60 text-white z-10">Admins, Instructors, and Students have access to up to date records of courses, instructors, grades and more!</h1>
+            <h1 class="text-2xl text-left ml-10 p-2 mr-60 pb-20 text-white z-10">Please login with your provided credentials or reach out to your Database Admin.</h1>
+            
           </div>
           <div class="hero-content text-center text-neutral-content w-5/12">
             <div class="max-w-lg">
@@ -44,13 +42,13 @@
             </div>
             </div>
           </div>
-          {% if error %}
-          <div role="alert" class="alert alert-error absolute bottom-10 w-1/2">
+        </div>
+        {% if error %}
+          <div role="alert" class="alert alert-error absolute bottom-10 w-10/12 mx-10 px-10">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span>Invalid Login, please try again.</span>
           </div>
         {% endif %}
-        </div>
       </div>
     </div>
   </body>
