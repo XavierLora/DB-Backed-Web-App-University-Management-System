@@ -136,11 +136,6 @@ def instructor_dashboard_view(request):
                 semester = request.GET.get('semester')
                 year = request.GET.get('year')
                 course = request.GET.get('course')
-<<<<<<< Updated upstream
-=======
-                section = request.GET.get('section')
->>>>>>> Stashed changes
-
                 # Query to get instructor ID based on name
                 instructor = Instructor.objects.get(name=instructor_name)
                 instructor_id = instructor.id
@@ -150,12 +145,7 @@ def instructor_dashboard_view(request):
 
                 print(courses_taught_filter)
 
-                # Query to get student enrollments for each course
-<<<<<<< Updated upstream
                 student_enrollments = []
-=======
-                student_enrollment = []
->>>>>>> Stashed changes
                 for course in courses_taught_filter:
                     student_names = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year'])
                     student_enrollments.append((student_names))
