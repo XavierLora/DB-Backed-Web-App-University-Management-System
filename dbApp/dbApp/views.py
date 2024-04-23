@@ -119,6 +119,8 @@ def instructor_dashboard_view(request):
                 instructor_name = request.GET.get('instructor')
                 semester = request.GET.get('semester')
                 year = request.GET.get('year')
+                course = request.GET.get('course')
+                section = request.GET.get('section')
 
                 # Query to get instructor ID based on name
                 instructor = Instructor.objects.get(name=instructor_name)
@@ -130,12 +132,12 @@ def instructor_dashboard_view(request):
                 print(courses_taught_filter)
 
                 # Query to get student enrollments for each course
-                course_enrollments = []
+                student_enrollments = []
                 for course in courses_taught_filter:
-                    enrollment_count = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year']).count()
-                    course_enrollments.append((f"{course['course_id']} - {course['sec_id']}", enrollment_count))
+                    student_names = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year'], sec_id=course('section'))
+                    student_enrollments.append((student_names))
                 
-                context = {'course_enrollments': course_enrollments}
+                context = {'student_enrollments': student_enrollments}
                 template = loader.get_template('dbApp/instructor_dashboard.html')
                 return HttpResponse(template.render(context, request))
 

@@ -93,12 +93,11 @@
               </thead>
               <tbody>
                 <!-- row 1 -->
+                {% for student in student_enrollment %}
                 <tr>
-                  <td>Xavier Lora</td>
+                  <td>{{ student.0 }}</td> <!-- Student Enrollment -->
                 </tr>
-                <tr>
-                  <td>Rowan Rische</td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
