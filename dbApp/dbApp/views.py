@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import mysql.connector
-from .models import Instructor, Teaches, Takes
-from django.db.models import Min, Max, Avg
+from .models import Instructor, Teaches, Takes, Funding, Papers
+from django.db.models import Min, Max, Avg, Sum
 from django.template import loader
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -69,16 +69,32 @@ def admin_dashboard_view(request):
                 return HttpResponse(template.render(context, request))
             elif action == 'performance':
                 instructor_name = request.GET.get('instructor')
-                semester = request.GET.get('semester')
-                year = request.GET.get('year')
+                instructor_semester = request.GET.get('semester')
+                instructor_year = request.GET.get('year')
+                print(instructor_name, instructor_semester, instructor_year)
                 instructor = Instructor.objects.get(name=instructor_name)
                 instructor_id = instructor.id
                 instructor_performance = []
                 # Query to get courses taught by the instructor in a specific semester and year
                 courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
-                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year).count()
-                
-                instructor_performance.append((instructor.name, courses_taught_filter))
+                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=instructor_semester, year=instructor_year)
+                courses_taught_filter_count = courses_taught.filter(teacher_id=instructor_id, semester=instructor_semester, year=instructor_year).count()
+                enrollment_count = []
+                for course in courses_taught_filter:
+                    enrollment_count = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year']).count()
+
+                instructor_funding = Funding.objects.values('name', 'semester', 'funding', 'year')
+                instructor_funding_filter = instructor_funding.filter(name=instructor_name, year=instructor_year, semester = instructor_semester)
+                instructor_funding_sum = instructor_funding_filter.aggregate(total_funding=Sum('funding'))
+                total_funding_sum = instructor_funding_sum['total_funding'] if instructor_funding_sum['total_funding'] else 0
+
+                instructor_papers = Papers.objects.values('name', 'semester', 'papers', 'years')
+                print(instructor_papers)
+                instructor_papers_filter = instructor_papers.filter(name=instructor_name, years=instructor_year, semester = instructor_semester)
+                print(instructor_papers_filter)
+                instructor_papers_sum = instructor_papers_filter.aggregate(total_papers=Sum('papers'))
+
+                instructor_performance.append((instructor.name, courses_taught_filter_count, enrollment_count, total_funding_sum, f"{instructor_papers_sum}"))
                 print(instructor_performance)
                 context = {'instructor_performance': instructor_performance}
                 template = loader.get_template('dbApp/admin_dashboard.html')
@@ -120,6 +136,10 @@ def instructor_dashboard_view(request):
                 semester = request.GET.get('semester')
                 year = request.GET.get('year')
                 course = request.GET.get('course')
+<<<<<<< Updated upstream
+=======
+                section = request.GET.get('section')
+>>>>>>> Stashed changes
 
                 # Query to get instructor ID based on name
                 instructor = Instructor.objects.get(name=instructor_name)
@@ -131,7 +151,11 @@ def instructor_dashboard_view(request):
                 print(courses_taught_filter)
 
                 # Query to get student enrollments for each course
+<<<<<<< Updated upstream
                 student_enrollments = []
+=======
+                student_enrollment = []
+>>>>>>> Stashed changes
                 for course in courses_taught_filter:
                     student_names = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year'])
                     student_enrollments.append((student_names))

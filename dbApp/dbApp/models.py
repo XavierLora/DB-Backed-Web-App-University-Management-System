@@ -49,7 +49,7 @@ class Funding(models.Model):
     name = models.CharField(max_length=32)
     semester = models.IntegerField()
     funding = models.IntegerField()
-    years = models.IntegerField()
+    year = models.IntegerField()
     class Meta:
         db_table = 'funding'
     
