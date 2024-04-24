@@ -77,8 +77,8 @@
           </label>
           <select name="section" class="select select-bordered w-fit max-w-xs">
             <option disabled selected>Section:</option>
-            <option value="1">01</option>
-            <option value="2">02</option>
+            <option value="01">01</option>
+            <option value="02">02</option>
           </select>
           <select name="semester" class="select select-bordered w-fit max-w-xs">
             <option disabled selected>Semester:</option>
@@ -98,9 +98,9 @@
               </thead>
               <tbody>
                 <!-- row 1 -->
-                {% for student in student_enrollment %}
+                {% for student in students_names_filter %}
                 <tr>
-                  <td>{{ student.0 }}</td> <!-- Student Enrollment -->
+                  <td>{{ student.name }}</td> <!-- Student Enrollment -->
                 </tr>
                 {% endfor %}
               </tbody>

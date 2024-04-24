@@ -134,26 +134,22 @@ def instructor_dashboard_view(request):
                 return HttpResponse(template.render(context, request))
             elif action == 'student_enrollment':
                 instructor_name = request.GET.get('instructor')
-                semester = request.GET.get('semester')
-                year = request.GET.get('year')
+                course_semester = request.GET.get('semester')
+                course_section = request.GET.get('section')
                 course = request.GET.get('course')
                 # Query to get instructor ID based on name
                 instructor = Instructor.objects.get(name=instructor_name)
                 instructor_id = instructor.id
                 # Query to get courses taught by the instructor in a specific semester and year
-                courses_taught = Teaches.objects.values('teacher_id', 'course_id', 'sec_id', 'semester', 'year')
-                courses_taught_filter = courses_taught.filter(teacher_id=instructor_id, semester=semester, year=year)
-
-                print(courses_taught_filter)
-
-                student_enrollments = []
-                for course in courses_taught_filter:
-                    student_names = Takes.objects.filter(course_id=course['course_id'], sec_id=course['sec_id'], semester=course['semester'], year=course['year'])
-                    student_enrollments.append((student_names))
-                print(student_enrollments)
-                # student_names = Students.objects.filter(student_id=)
-                
-                context = {'student_enrollments': student_enrollments}
+                students_taught = Takes.objects.values('student_id', 'course_id', 'sec_id', 'semester', 'year')
+                students_taught_filter = students_taught.filter(course_id = course, sec_id = course_section, semester = course_semester)
+                student_ids = [student['student_id'] for student in students_taught_filter]
+                students_names = Students.objects.values('name', 'student_id')
+                students_names_filter = students_names.filter(student_id__in=student_ids)
+                print(students_names_filter)
+                # You can further process students_names_filter if needed
+    
+                context = {'students_names_filter': students_names_filter}
                 template = loader.get_template('dbApp/instructor_dashboard.html')
                 return HttpResponse(template.render(context, request))
 
