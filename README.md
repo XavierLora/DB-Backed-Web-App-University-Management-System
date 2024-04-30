@@ -22,3 +22,6 @@ Welcome to our web-based university management system! Leveraging the existing u
 ### For Students:
 
 - **Course Section Query:** Seamlessly search for and explore available course sections by department, year, and semester, aiding in course selection and planning.
+
+
+### Note: Must have localhost mysql server running with the university database populated with data.
